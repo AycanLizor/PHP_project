@@ -91,11 +91,11 @@ public function checkingItem(Request $request){
   }
 
 public function edit($inventory_id){
-    $item = InventoryProject::find($inventory_id);
-    return view('update_item', compact('item','inventory_id'));
+    $data = InventoryProject::find($inventory_id);
+    return view('update_item')->with('data', $data)->with('inventory_id', $inventory_id);//, compact('item','inventory_id'));
 }  
 
-public function updateItem(Request $request, $inventory_id)
+public function updateItem(Request $request)
 {
         
     $validator = Validator::make($request->all(), [
@@ -130,10 +130,10 @@ public function updateItem(Request $request, $inventory_id)
         $item->quantity = $quantity;
         $item->save();
         session(['message' => 'Item was updated successfully!']);
-        return redirect('update_item');
+        //return redirect('update_item/' + $inventory_id);
     }
     session(['message' => 'Item does not exist or quantity is not valid!']);
-        return redirect('update_item');
+        return redirect('update_item/' . $inventory_id);
  }
 
 //  public function edit($inventory_id)

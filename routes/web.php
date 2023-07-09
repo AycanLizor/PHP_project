@@ -27,4 +27,4 @@ Route::post('/add_item', [InventoryProjectController::class,"insertItem"]);
 //Route::post('/update_item', [InventoryProjectController::class,"update"]);
 Route::post('/update_item', [InventoryProjectController::class,"updateItem"]);
 Route::get('/checking_item', [InventoryProjectController::class,"checkingItem"]);
-Route::get('/update_item', [InventoryProjectController::class,"edit"]);
+Route::get('/update_item/{inventory_id}', [InventoryProjectController::class,"edit"]);

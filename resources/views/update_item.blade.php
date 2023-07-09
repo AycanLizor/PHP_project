@@ -11,7 +11,8 @@
   <body>  
      <div class=" container2">
      
-        <form class="signIn active-dx form3" action="{{action('InventoryProjectController@updateItem',$inventory_id)}}" method="POST">
+        {{-- <form class="signIn active-dx form3" action="{{action('InventoryProjectController@updateItem',$inventory_id)}}" method="POST">--}}
+        <form class="signIn active-dx form3" action="/update_item" method="POST">
          @csrf
          <p class="user_name">User Name: {{ session('userName') }}</p>
           <h3 class="center"> Update Item Form</h3>
