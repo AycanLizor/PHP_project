@@ -9,14 +9,13 @@
     
   </head>
   <body>
-    <div class="container">
+    <div class="main">
         <form class="signUp active-dx" action="/signup" method="POST">
           @csrf
           <h3>Create Your Account</h3>
-          <p>Just enter your email address</br>
-      and your password for join.
-          </p>
-          <input class="w100" type="email" name ="email" placeholder="Insert eMail" reqired autocomplete='off' value ={{old('email')}}/>
+          <p> enter your information for join </p>
+          <input class="w100" type="test" name ="name" placeholder="Insert Full Name" reqired autocomplete='off'/>
+          <input class="w100" type="email" name ="email" placeholder="Insert eMail" reqired/>
           <input type="password"  name ="password" placeholder="Insert Password" reqired />
           <input type="password"  name ="password2" placeholder="Verify Password" reqired />
           <button class="form-btn sx log-in" type="button"><a href="/login"> Back</a> </button>

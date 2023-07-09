@@ -9,5 +9,5 @@ class UsersProject extends Model
 {
     Protected $table='project_users';
     //Protected $fillable = ['email', 'password', 'password2'];
-    Public $timestamps = false; 
+    Public $timestamps = true; 
 }

@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersProjectController;
-
+use App\Http\Controllers\InventoryProjectController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,3 +18,13 @@ Route::get('/login', [UsersProjectController::class,"showLoginForm"]);
 Route::post('/login', [UsersProjectController::class,"loginUser"]);
 Route::get('/signup', [UsersProjectController::class,"showSignUpForm"]);
 Route::post('/signup', [UsersProjectController::class,"insertUser"]);
+
+Route::get('/inventory_table', [InventoryProjectController::class,"showInventoryTable"]);
+Route::get('/add_item', [InventoryProjectController::class,"showAddItemForm"]);
+Route::post('/add_item', [InventoryProjectController::class,"insertItem"]);
+
+//Route::get('/update_item', [InventoryProjectController::class,"showUpdateItemForm"]);
+//Route::post('/update_item', [InventoryProjectController::class,"update"]);
+Route::post('/update_item', [InventoryProjectController::class,"updateItem"]);
+Route::get('/checking_item', [InventoryProjectController::class,"checkingItem"]);
+Route::get('/update_item', [InventoryProjectController::class,"edit"]);

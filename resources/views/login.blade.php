@@ -8,12 +8,11 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
   <body>
-    <div class="container">
+    <div class="main">
         <form class="signUp inactive-dx" >
           <h3>Create Your Account</h3>
-          <p>Just enter your email address</br>
-      and your password for join.
-          </p>
+          <p> enter your information for join</p>
+          <input class="w100" type="test" name ="name" placeholder="Insert Full Name" reqired autocomplete='off'/>
           <input class="w100" type="email" placeholder="Insert eMail" autocomplete='off' />
           <input type="password" placeholder="Insert Password" />
           <input type="password" placeholder="Verify Password" />

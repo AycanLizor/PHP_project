@@ -8,10 +8,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
   <body>  
-    <div class="container">
+    <div class="main">
        
         <form class="signIn active-dx">
-          <h4>Check your mail address or password </br><br> Please try again!</h4><br><br>
+          <h4>Something went wrong! </br><br> Please try again!</h4><br><br>
                 
           
           <button class="form-btn sx back" type="button"><a href="/signup"> Sign Up</a>        
