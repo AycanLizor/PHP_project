@@ -37,7 +37,7 @@
               <td>{{$item->quantity}}</td>
               <td>{{$item->created_at}}</td>
               <td>{{$item->updated_at}}</td>
-              <td><button class="btn_check btn_check2" type="button"><a href=""> Edit</a> </button></td>
+              <td><a href="" class="btn_check btn_check2"> Edit</a></td>
               <td><a class="remove" href="#">Remove</a></td>  
               </tr>
               @endforeach
