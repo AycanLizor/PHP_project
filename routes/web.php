@@ -23,8 +23,7 @@ Route::get('/inventory_table', [InventoryProjectController::class,"showInventory
 Route::get('/add_item', [InventoryProjectController::class,"showAddItemForm"]);
 Route::post('/add_item', [InventoryProjectController::class,"insertItem"]);
 
-//Route::get('/update_item', [InventoryProjectController::class,"showUpdateItemForm"]);
-//Route::post('/update_item', [InventoryProjectController::class,"update"]);
-Route::post('/update_item', [InventoryProjectController::class,"updateItem"]);
-Route::get('/checking_item', [InventoryProjectController::class,"checkingItem"]);
 Route::get('/update_item/{inventory_id}', [InventoryProjectController::class,"edit"]);
+Route::get('/inventory_table/{inventory_id}', [InventoryProjectController::class,"deleteItem"]);
+Route::post('/update_item', [InventoryProjectController::class,"updateItem"]);
+//Route::get('/checking_item', [InventoryProjectController::class,"checkingItem"]);

@@ -54,7 +54,7 @@ function insertItem(Request $request)
         $item->quantity = $request->quantity;
         $item->save();
         
-        session(['message' => '']);
+        session(['message2' => $request->inventory_id.' was added']);
         return redirect('inventory_table');
     }
 }
@@ -66,33 +66,33 @@ public function showUpdateItemForm()
     return view('update_item');
 }
 
-public function checkingItem(Request $request){
+// public function checkingItem(Request $request){
     
-    $items = InventoryProject::get(['inventory_id', 'name', 'description', 'quantity', 'created_at', 'updated_at']);
-    $redisKey = 'inventory_id';
-    $data = [];
-    $inventory_id = $request->item_id;
+//     $items = InventoryProject::get(['inventory_id', 'name', 'description', 'quantity', 'created_at', 'updated_at']);
+//     $redisKey = 'inventory_id';
+//     $data = [];
+//     $inventory_id = $request->item_id;
 
-    foreach($items as $item) {
-     Redis::hmset($redisKey.':'.$item->inventory_id,[
-        'name'=>$item->name,
-        'description'=>$item->description,
-        'quantity'=>$item->quantity,
-        'created_at'=>$item->created_at,
-        'updated_at'=>$item->updated_at,
-     ]); 
+//     foreach($items as $item) {
+//      Redis::hmset($redisKey.':'.$item->inventory_id,[
+//         'name'=>$item->name,
+//         'description'=>$item->description,
+//         'quantity'=>$item->quantity,
+//         'created_at'=>$item->created_at,
+//         'updated_at'=>$item->updated_at,
+//      ]); 
            
-     if (Redis::exists($redisKey . ':' . $inventory_id)) {
-        $data = Redis::hgetall($redisKey . ':' . $inventory_id);
-        break;
-     }
-    }
-     return view('update_item')->with('data', $data)->with('inventory_id', $inventory_id);
-  }
+//      if (Redis::exists($redisKey . ':' . $inventory_id)) {
+//         $data = Redis::hgetall($redisKey . ':' . $inventory_id);
+//         break;
+//      }
+//     }
+//      return view('update_item')->with('data', $data)->with('inventory_id', $inventory_id);
+//   }
 
 public function edit($inventory_id){
     $data = InventoryProject::find($inventory_id);
-    return view('update_item')->with('data', $data)->with('inventory_id', $inventory_id);//, compact('item','inventory_id'));
+    return view('update_item')->with('data', $data)->with('inventory_id', $inventory_id);
 }  
 
 public function updateItem(Request $request)
@@ -102,26 +102,19 @@ public function updateItem(Request $request)
         'inventory_id' => 'required',
         'name' => 'required',
         'description' => 'required',
-        'quantity' => 'required',
+        'quantity' => 'required|min:0',
     ]);
 
     if ($validator->fails()) {
         session(['message' => 'Item does not exist or quantity is not valid!']);
         return redirect('update_item');
-    }
+    } 
 
     $inventory_id = $request->inventory_id;
     $name = $request->name;
     $description = $request->description;
     $quantity = $request->quantity;
-
-
-    // $inventory_id = isset($request->inventory_id) ? $request->input('inventory_id') : '';
-    // $name = isset($request->name) ? $request->input('name') : '';
-    // $description = isset($request->description) ? $request->input('description') : '';
-    // $quantity = isset($request->quantity) ? $request->input('quantity') : '';
-
-    //$item = InventoryProject::where('inventory_id', $inventory_id)->first();
+    
     $item = InventoryProject::find($inventory_id);
 
     if ($item) {
@@ -130,34 +123,27 @@ public function updateItem(Request $request)
         $item->quantity = $quantity;
         $item->save();
         session(['message' => 'Item was updated successfully!']);
-        //return redirect('update_item/' + $inventory_id);
+                
     }
-    session(['message' => 'Item does not exist or quantity is not valid!']);
-        return redirect('update_item/' . $inventory_id);
+           return redirect('update_item/'. $inventory_id);
  }
 
-//  public function edit($inventory_id)
-//  {
-//     $item = InventoryProject::find($inventory_id); 
-//     return view('update_item', compact('item','inventory_id'));
-//  }
+ public function deleteItem(Request $request)
+ {  $inventory_id = $request->inventory_id;
+    $name = $request->name;
+    $description = $request->description;
+    $quantity = $request->quantity;
 
-//  public function update(Request $request, $inventory_id)
-//  {
-//                 $this->validate($request, [
-//                     'inventory_id'  => 'required',
-//                     'name'          => 'required',
-//                     'description'   => 'required',
-//                     'quantity'      => 'required',
-//                 ]);
-//  $item = InventoryProject::find($inventory_id);
-//         $item->inventory_id = request->get('inventory_id');        
-//         $item->name = request->get('name'); 
-//         $item->description = request->get('description'); 
-//         $item->quantity = request->get('quantity'); 
-//         $item->save();
+    $item = InventoryProject::find($inventory_id);
+    if ($item) {
+        $item->delete();
+        session(['message2' => $request->inventory_id.' was deleted successfully!']);
+        return redirect('inventory_table');
+    } else {
+        session(['message2' => $request->inventory_id.' cannot be deleted successfully!']);
+        return redirect('inventory_table');
+    }
 
-//         return redirect()->route('inventory_table');
-//  }
-  
+   
+  }
 }

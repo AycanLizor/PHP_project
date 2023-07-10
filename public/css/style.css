@@ -28,7 +28,7 @@ form {
     text-align: center;
     background: #fff;
     width: 310px;
-    height: 470px;
+    height: 500px;
     border-radius: 5px;
     padding: 30px 20px 0 20px;
     box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 0.25);
@@ -308,11 +308,6 @@ h3 {
     text-decoration: underline;
 }
 
-a {
-    text-decoration: none;
-    color: #fff;
-}
-
 h1 {
     font-size: 30px;
     color: #fff;
@@ -371,9 +366,14 @@ td {
     text-transform: none;
 }
 
-.error_msg {
-    color: red;
-    font-size: 20px;
+.session_msg {
+    color: rgb(128, 7, 96);
+    font-size: 21px;
+    margin-bottom: 10px;
+}
+.msg {
+    height: 50px;
+    border: 1px solid red;
 }
 
 .container {
@@ -423,4 +423,21 @@ td {
 .btn:hover {
     color: black;
     cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.edit {
+    width: 75px;
+    margin: auto;
+    font-family: "Dosis";
+    display: block;
+    color: #fff;
+
+    font-size: 15px;
+    border-radius: 4px;
+    background-color: #ff7d00;
 }

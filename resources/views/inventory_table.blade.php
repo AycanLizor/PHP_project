@@ -15,6 +15,7 @@
        
         <form class="signIn active-dx form2">
           @csrf
+         
           <p class="user_name">User Name: {{ session('userName') }}</p>
           <h3 class="center"> LIST OF INVENTORIES</h3>
         <table >
@@ -37,19 +38,22 @@
               <td>{{$item->quantity}}</td>
               <td>{{$item->created_at}}</td>
               <td>{{$item->updated_at}}</td>
-              <td><a href="/update_item/{{$item->inventory_id}}" class="btn_check btn_check2"> Edit</a></td>
-              <td><a class="remove" href="#">Remove</a></td>  
+              <td><a class="edit" href="/update_item/{{$item->inventory_id}}" > Edit</a></td>
+              <td><a class="remove" href="/inventory_table/{{$item->inventory_id}}">Remove</a></td>  
               </tr>
               @endforeach
             </tbody>
-         
-            <table>
+            <table><br><br>
+              <h4 class="session_msg">{{ session('message2') }}</h4>
+              <br><br>
+              
+              
              
             <button class="form-btn form-btn2 sx back" type="button"><a href="/add_item"> Add New</a> </button>
-            <button class="form-btn form-btn2 sx back" type="button"><a href="/update_item">Update</a></button>
-            <button class="form-btn form-btn2 sx back" type="button"><a href="#">Remove</a></button>
             <button class="form-btn form-btn2 dx back" type="button"><a href="/login"> SignOut</a></button>    
         </form>
+
+        
       </div>
 
       <script>
