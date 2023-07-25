@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersProjectController;
 use App\Http\Controllers\InventoryProjectController;
+use App\Http\Controllers\TransactionsProjectController; 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,4 +27,5 @@ Route::post('/add_item', [InventoryProjectController::class,"insertItem"]);
 Route::get('/update_item/{inventory_id}', [InventoryProjectController::class,"edit"]);
 Route::get('/inventory_table/{inventory_id}', [InventoryProjectController::class,"deleteItem"]);
 Route::post('/update_item', [InventoryProjectController::class,"updateItem"]);
-//Route::get('/checking_item', [InventoryProjectController::class,"checkingItem"]);
+Route::get('/transactions', [TransactionsProjectController::class,"showTransactions"]);
+   

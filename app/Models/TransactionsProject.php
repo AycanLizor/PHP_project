@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TransactionProject extends Model
+class TransactionsProject extends Model
 {
     Protected $table='project_transactions';
     Public $timestamps = false; 

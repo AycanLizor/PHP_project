@@ -46,11 +46,12 @@
             <table><br><br>
               <h4 class="session_msg">{{ session('message2') }}</h4>
               <br><br>
-              
-              
+                    
              
             <button class="form-btn form-btn2 sx back" type="button"><a href="/add_item"> Add New</a> </button>
-            <button class="form-btn form-btn2 dx back" type="button"><a href="/login"> SignOut</a></button>    
+            <button class="form-btn form-btn2 sx back" type="button"><a href="/transactions">Transactions</a></button> 
+            <button class="form-btn form-btn2 dx back" type="button"><a href="/login"> SignOut</a></button>
+              
         </form>
 
         
