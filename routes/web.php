@@ -15,8 +15,8 @@ use App\Http\Controllers\TransactionsProjectController;
 |
 */
 
-Route::get('/login', [UsersProjectController::class,"showLoginForm"]);
-Route::post('/login', [UsersProjectController::class,"loginUser"]);
+Route::get('/', [UsersProjectController::class,"showLoginForm"]);
+Route::post('/', [UsersProjectController::class,"loginUser"]);
 Route::get('/signup', [UsersProjectController::class,"showSignUpForm"]);
 Route::post('/signup', [UsersProjectController::class,"insertUser"]);
 
