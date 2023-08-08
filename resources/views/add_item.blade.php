@@ -35,9 +35,8 @@
           <button class="form-btn dx back" type="submit"> Submit </button>
           <button class="form-btn sx back" ><a href="/inventory_table"> Back to Inventory List</a></button>    
           </form>
-          
-    
-          
+          <h4 class="session_msg">{{ session('message_error') }}</h4>
+                    
         </form>
       </div>
 

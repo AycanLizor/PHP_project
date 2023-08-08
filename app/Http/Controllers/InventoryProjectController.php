@@ -19,14 +19,15 @@ class InventoryProjectController extends Controller
 //*******************ADDING ITEMS TO THE INVENTORY TABLE*********/
     
 public function showAddItemForm()
-{   session(['message2' =>'']);
+{   session(['message2' => '']);
     return view('add_item');
 }
 
 
 public function showInventoryTable()
-{   
-
+{    session(['message_error' => '']);
+    
+   
     $items = InventoryProject::all();
     return view('inventory_table',['items'=>$items]);
   
@@ -34,22 +35,21 @@ public function showInventoryTable()
 
 
 function insertItem(Request $request)
-{
+{    session(['message2' =>'']);
       $validator = Validator::make($request->all(), [
             'inventory_id' =>'required',
             'name' =>'required',
             'description' => 'required',
-            'quantity' => 'required',
+            'quantity' => 'required|integer|min:0'
             
     ]);
 
     
     if ($validator->fails()) {
-        session(['message2' => 'Please try again!']);
-       return redirect('inventory_table');
-    }
-    else
-    {
+        session(['message_error' => 'Invalid input, try again!']);
+        return redirect()->back()->withErrors($validator)->withInput();
+    } 
+    else {
         $item = new InventoryProject;
         $item->inventory_id = $request->inventory_id;
         $item->name = $request->name;
@@ -69,55 +69,56 @@ function insertItem(Request $request)
 //*******************UPDATE ITEM*********/php
 
 public function showUpdateItemForm()
-{   session(['message2' =>'']);
+{  
     return view('update_item');
 }
 
 
 public function edit($inventory_id){
+    
     $data = InventoryProject::find($inventory_id);
     return view('update_item')->with('data', $data)->with('inventory_id', $inventory_id);
 }  
 
 public function updateItem(Request $request)
-{   session(['message2' =>'']);
-        
+{
+   
+
     $validator = Validator::make($request->all(), [
         'inventory_id' => 'required',
         'name' => 'required',
         'description' => 'required',
-        'quantity' => 'required|min:0',
+        'quantity' => 'required|integer|min:0', // Add the 'integer' rule and set 'min:0' to disallow negative values.
     ]);
 
     if ($validator->fails()) {
-        session(['message2' => 'Item does not exist or quantity is not valid!']);
-        return redirect('update_item');
-    } 
-
-    $inventory_id = $request->inventory_id;
-    $name = $request->name;
-    $description = $request->description;
-    $quantity = $request->quantity;
-    $item = InventoryProject::find($inventory_id);
-   
-
-    if ($item) {
-        $item->name = $name;
-        $item->description = $description;
-        $item->quantity = $quantity;
-        $item->save();
-
-        $item_transaction = InventoryProject::find($item->inventory_id);
-        $transactionsProjectController = new TransactionsProjectController();
-        $savingTransaction = $transactionsProjectController->addTransaction($item_transaction,"Updated");
-
+        session(['message_error' => 'Item does not exist or quantity is not valid!']);
+        return redirect()->back()->withErrors($validator)->withInput();
+    } else {
         
+        $inventory_id = $request->inventory_id;
+        $name = $request->name;
+        $description = $request->description;
+        $quantity = $request->quantity;
+        $item = InventoryProject::find($inventory_id);
+        session(['message2' => '']); 
+                  
+        if ($item) {
+            $item->name = $name;
+            $item->description = $description;
+            $item->quantity = $quantity;
+            $item->save();
 
-        session(['message2' => 'Item was updated successfully!']);
-                
+            $item_transaction = InventoryProject::find($item->inventory_id);
+            $transactionsProjectController = new TransactionsProjectController();
+            $savingTransaction = $transactionsProjectController->addTransaction($item_transaction, "Updated");
+
+            session(['message2' => $request->inventory_id.' was updated successfully!']);
+        }
+
+        return redirect('inventory_table');
     }
-           return redirect('update_item/'. $inventory_id);
- }
+}
 
  public function deleteItem(Request $request)
  {  session(['message2' =>'']);

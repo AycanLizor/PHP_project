@@ -17,11 +17,7 @@
          <p class="user_name">User Name: {{ session('userName') }}</p>
           <h3 class="center"> Update Item Form</h3>
           
-          <div class="container">
-            <input name="item_id" type="text" class="text_input" placeholder="Enter Inventory ID" />
-            <button value="Check" class="btn_check" type="submit">Check</button>
-          </div> 
-      
+            
          
           <table >
             <tr>
@@ -38,8 +34,10 @@
               <td><input  class="input_form" type="number" name ="quantity" value="{{ isset($data['quantity']) ? $data['quantity'] : '' }}"  /></td>
             </tr>         
             <table>
-              <h4 class="session_msg">{{ session('message') }}</h4>
-            <button class="form-btn dx back" type="submit"> Submit </button>
+                        
+              <h4 class="session_msg">{{ session('message_error') }}</h4>
+               
+              <button class="form-btn dx back" type="submit"> Submit </button>
           <button class="form-btn sx back" ><a href="/inventory_table"> Back to Inventory List</a></button>    
         </form>
       </div>

@@ -377,9 +377,7 @@ td {
 }
 
 .container {
-    position: unset;
     display: flex;
-    border: 1px solid orange;
     height: 50px;
     margin-bottom: 10px;
     width: 30%;

@@ -34,7 +34,6 @@ public function addTransaction(InventoryProject $inventory, $type){
     $transaction->user_name = session('userName');
     $transaction->type = $type;
     $transaction->quantity = $inventory->quantity;
-    $transaction->created_at = $inventory->created_at;
     $transaction->save();
   
 }

@@ -19,6 +19,7 @@ Route::get('/', [UsersProjectController::class,"showLoginForm"]);
 Route::post('/', [UsersProjectController::class,"loginUser"]);
 Route::get('/signup', [UsersProjectController::class,"showSignUpForm"]);
 Route::post('/signup', [UsersProjectController::class,"insertUser"]);
+Route::get('/readCookie', [UsersProjectController::class,"readCookie"]);
 
 Route::get('/inventory_table', [InventoryProjectController::class,"showInventoryTable"]);
 Route::get('/add_item', [InventoryProjectController::class,"showAddItemForm"]);

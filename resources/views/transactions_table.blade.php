@@ -47,7 +47,7 @@
               <br><br>
             <button class="form-btn form-btn2 sx back" type="button"><a href="/add_item"> Add New</a> </button>
             <button class="form-btn form-btn2 sx back" type="button"><a href="/inventory_table">Back to Inventory List</a></button> 
-            <button class="form-btn form-btn2 dx back" type="button"><a href="/login"> SignOut</a></button>  
+            <button class="form-btn form-btn2 dx back" type="button"><a href="/"> SignOut</a></button>  
         </form>
 
         

@@ -18,7 +18,7 @@
           <input class="w100" type="email" name ="email" placeholder="Insert eMail" reqired/>
           <input type="password"  name ="password" placeholder="Insert Password" reqired />
           <input type="password"  name ="password2" placeholder="Verify Password" reqired />
-          <button class="form-btn sx log-in" type="button"><a href="/login"> Back</a> </button>
+          <button class="form-btn sx log-in" type="button"><a href="/"> Back</a> </button>
           <button class="form-btn dx" type="submit">Submit</button>
         </form>
 
