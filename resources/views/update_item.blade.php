@@ -31,7 +31,7 @@
               <td><input class="input_form" type="Text" name="inventory_id" value="{{ isset($inventory_id) ? $inventory_id : '' }}" /></td>
               <td><input class="input_form" type="Text"  name ="name" value="{{ isset($data['name']) ? $data['name'] : '' }}"  /></td>
               <td><input class="input_form" type="Text"  name ="description" value="{{ isset($data['description']) ? $data['description'] : '' }}" /></td>
-              <td><input  class="input_form" type="number" name ="quantity" value="{{ isset($data['quantity']) ? $data['quantity'] : '' }}"  /></td>
+              <td><input class="input_form" type="number" name="quantity" value="{{ isset($data['quantity']) ? $data['quantity'] : '' }}" min="0" step="1" /></td>
             </tr>         
             <table>
                         

@@ -13,54 +13,98 @@ use DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\TransactionsProjectController;
+use Carbon\Carbon;
 
 class InventoryProjectController extends Controller
 {
 //*******************ADDING ITEMS TO THE INVENTORY TABLE*********/
     
 public function showAddItemForm()
-{   session(['message2' => '']);
+{   
+    if (!session()->has('user_id') || !session()->has('userName')) {
+        return redirect('/'); // Redirect to the login page or another appropriate action
+    }    
+    session(['message2' => '']);
     return view('add_item');
 }
 
 
-public function showInventoryTable()
-{    session(['message_error' => '']);
-    
+public function showInventoryTableRedis()
+{    
+    if (!session()->has('user_id') || !session()->has('userName')) {
+        return redirect('/'); // Redirect to the login page or another appropriate action
+    }
+       
+    session(['message_error' => '']);
+
+    $keys = Redis::keys('Inventory:*');
+    $items = [];
    
-    $items = InventoryProject::all();
-    return view('inventory_table',['items'=>$items]);
-  
+    foreach ($keys as $key) {
+        $newKey = ltrim($key, 'laravel_database_');
+        $item = Redis::hgetall($newKey);
+        $items[]=$item;
+    }
+
+    return view('inventory_table_redis', ['items' => $items]);
+}
+//*************************************************************/
+
+public function showInventoryTable()
+{    
+    if (!session()->has('user_id') || !session()->has('userName')) {
+        return redirect('/'); // Redirect to the login page or another appropriate action
+    }
+       
+    session(['message_error' => '']);
+
+    $items = InventoryProject::all(); // Retrieve data from MySQL database
+    return view('inventory_table', ['items' => $items]);
 }
 
+//************************************************************ */
+public function insertItem(Request $request)
+{    
+    if (!session()->has('user_id') || !session()->has('userName')) {
+        return redirect('/');
+    }
 
-function insertItem(Request $request)
-{    session(['message2' =>'']);
-      $validator = Validator::make($request->all(), [
-            'inventory_id' =>'required',
-            'name' =>'required',
-            'description' => 'required',
-            'quantity' => 'required|integer|min:0'
-            
+    session(['message2' => '']);
+    
+    $validator = Validator::make($request->all(), [
+        'inventory_id' => 'required',
+        'name' => 'required',
+        'description' => 'required',
+        'quantity' => 'required|integer|min:0'
     ]);
 
-    
     if ($validator->fails()) {
         session(['message_error' => 'Invalid input, try again!']);
         return redirect()->back()->withErrors($validator)->withInput();
-    } 
-    else {
+    } else {
         $item = new InventoryProject;
         $item->inventory_id = $request->inventory_id;
         $item->name = $request->name;
         $item->description = $request->description;
         $item->quantity = $request->quantity;
-        $item->save();
-        session(['message2' => $request->inventory_id.' was added']);
+        $item->save(); // Save data to MySql.
+
+       
+        $id = 'Inventory:' . $item->inventory_id; // Create id for Redis.
+        $itemRedis = [
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'quantity' => $request->input('quantity'),
+        ];
+      
+    
+        Redis::hmset($id, $itemRedis); // Save data to Redis.
+
+        session(['message2' => $request->inventory_id . ' was added']);
 
         $item_transaction = InventoryProject::find($item->inventory_id);
         $transactionsProjectController = new TransactionsProjectController();
-        $savingTransaction = $transactionsProjectController->addTransaction($item_transaction,"Created");
+        $savingTransaction = $transactionsProjectController->addTransaction($item_transaction, "Created");
         
         return redirect('inventory_table');
     }
@@ -70,19 +114,30 @@ function insertItem(Request $request)
 
 public function showUpdateItemForm()
 {  
+    if (!session()->has('user_id') || !session()->has('userName')) {
+        return redirect('/'); // Redirect to the login page or another appropriate action
+    }
+    
     return view('update_item');
 }
 
 
 public function edit($inventory_id){
-    
+    if (!session()->has('user_id') || !session()->has('userName')) {
+        return redirect('/'); // Redirect to the login page or another appropriate action
+    }
+     
     $data = InventoryProject::find($inventory_id);
     return view('update_item')->with('data', $data)->with('inventory_id', $inventory_id);
-}  
+} 
+
+//*************************************************** */
 
 public function updateItem(Request $request)
-{
-   
+{   
+    if (!session()->has('user_id') || !session()->has('userName')) {
+        return redirect('/'); // Redirect to the login page or another appropriate action
+    }
 
     $validator = Validator::make($request->all(), [
         'inventory_id' => 'required',
@@ -95,7 +150,6 @@ public function updateItem(Request $request)
         session(['message_error' => 'Item does not exist or quantity is not valid!']);
         return redirect()->back()->withErrors($validator)->withInput();
     } else {
-        
         $inventory_id = $request->inventory_id;
         $name = $request->name;
         $description = $request->description;
@@ -120,8 +174,18 @@ public function updateItem(Request $request)
     }
 }
 
+
+//******************************************************* */
+
+
  public function deleteItem(Request $request)
- {  session(['message2' =>'']);
+ {  
+    if (!session()->has('user_id') || !session()->has('userName')) {
+        return redirect('/'); // Redirect to the login page or another appropriate action
+    }
+    
+    
+    session(['message2' =>'']);
     
     $inventory_id = $request->inventory_id;
     $name = $request->name;

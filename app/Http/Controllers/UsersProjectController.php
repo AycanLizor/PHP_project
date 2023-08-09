@@ -8,6 +8,10 @@ use App\Models\InventoryProject;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\ContactMail;
 use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+
+
 class UsersProjectController extends Controller
 {
     public function showLoginForm()
@@ -15,6 +19,8 @@ class UsersProjectController extends Controller
         return view('login');
 
     }
+
+//****************************************************** */
 
     public function loginUser(Request $request)
     {
@@ -36,7 +42,6 @@ class UsersProjectController extends Controller
         return view('error');
         }
 
-     
         session(['user_id' => $user->user_id, 'userName' => $user->name]);
         return redirect('inventory_table');
     }
@@ -44,12 +49,13 @@ class UsersProjectController extends Controller
 //********************************************************************** */
 
     public function showSignUpForm()
-    {
+    {    session(['user_id' => null, 'userName' => null]);
         return view('signUp');
     }
 
     function insertUser(Request $request)
     {
+        session(['user_id' => null, 'userName' => null]);
         $validator = Validator::make($request->all(), [
                 'name' =>'required',
                 'email' =>'required|email|unique:users_project',
@@ -74,32 +80,20 @@ class UsersProjectController extends Controller
             Mail::to('aycanlizor@gmail.com')->send(new ContactMail());
             return view('success');
         }
-              
-               
     } 
-
-    public function setCookie(Request $request){
-        $expiration =1; //only 1 minute
-        $path="/";
-        $secure = false;
-        $httpOnly = true;
-        
-        $cookie = cookie("my-cookie", "my-cookie-value", $expiration, $path,$secure, $httpOnly);
-        $view = view("form_insert_data");
-        //return response ($view)->withCookie($cookie);
-         
-        }
     
-    public function readCookie(Request $request){
-        $cookie = $request->cookie("my-cookie"); //my-cookie is the name of the cookie
-        dd($cookie);
-      }
+//********************************************************************** */
 
-      public function deleteCookie()
-    {
-        $cookie= Cookie::forget('my-cookie');
-        //return response( "my-cookie was deleted")->withCookie($cookie);
+function signOut()
+{
+    try {
+        Session::forget('user_id');
+        Session::forget('userName');
+          
+    return redirect('/');
+    } catch (\Exception $e) {
+        return view('error');
+        
     }
-
-
+}
 }

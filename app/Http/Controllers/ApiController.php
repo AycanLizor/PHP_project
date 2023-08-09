@@ -9,12 +9,17 @@ use App\Models\TransactionsProject;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\ContactMail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class ApiController extends Controller
 {
 
   public function apiDeleteItem(Request $request)
-  {
+  {       if (!session()->has('user_id') || !session()->has('userName')) {
+         return response()->json(['message' => 'You are not authorized, please signin.'], 401);
+    } 
+
+
       $inventory_id = $request->inventory_id;
       $item = InventoryProject::find($inventory_id);
   
@@ -33,7 +38,7 @@ class ApiController extends Controller
 //********************************************************************** */
 
   public function apiUpdateItem(Request $request)
-  {
+  {     
       $validator = Validator::make($request->all(), [
           'inventory_id' => 'required',
           'name' => 'required',
@@ -71,7 +76,10 @@ class ApiController extends Controller
 //********************************************************************** */
 
   public function apiShowTransactions()
-  {
+  {    
+        if (!session()->has('user_id') || !session()->has('userName')) {
+       return response()->json(['message' => 'You are not authorized, please signin.'], 401);
+} 
       try {
           $transactions = TransactionsProject::all();
           return response()->json(['transactions' => $transactions], 200);
@@ -180,4 +188,18 @@ public function apiInsertUser(Request $request)
 
         return response()->json(['message' => 'An error occurred while registering the user'], 500);
     }
-}}
+}
+
+public function apiSignOut()
+{
+    try {
+        Session::forget('user_id');
+        Session::forget('userName');
+
+        return response()->json(['message' => 'Successfully signed out'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error signing out'], 500);
+    }
+}
+
+}

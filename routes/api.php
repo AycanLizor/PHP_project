@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Log;
 |
 */
 Route::post('/apiLogin', [ApiController::class,"apiLoginUser"]);
+Route::post('/apiSignOut', [ApiController::class,"apiSignOut"]);
+
 Route::post('/apiInsertUser', [ApiController::class,"apiInsertUser"]);
 Route::get('/apiInventory', [ApiController::class,"apiShowInventory"]);
 Route::post('/apiInsertItem', [ApiController::class,"apiInsertItem"]);

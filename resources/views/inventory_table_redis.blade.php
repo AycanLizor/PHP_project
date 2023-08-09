@@ -17,32 +17,25 @@
           @csrf
          
           <p class="user_name">User Name: {{ session('userName') }}</p>
-          <h3 class="center"> LIST OF INVENTORIES</h3>
+          <h3 class="center"> LIST OF INVENTORIES FROM REDIS</h3>
         <table >
             <thead>
               <th>Inventory ID</th>
               <th>Name</th>
               <th>Description</th>
               <th>Quantity</th>
-              <th>Created at</th>
-              <th>Updated at</th>
               <th>Edit</th>
               <th>Remove</th>
             </thead>
             <tbody>
               @foreach ($items as $item)
               <tr>
-              <td>{{$item->inventory_id}}</td>
-              <td>{{$item->name}}</td>
-              <td>{{$item->description}}</td>
-              <td>{{$item->quantity}}</td>
-              <td>{{$item->created_at}}</td>
-              <td>{{$item->updated_at}}</td>
-                          
-              <td><a class="edit" href="/update_item/{{$item->inventory_id}}" > Edit</a></td>
-              <td><a class="remove" href="/inventory_table/{{$item->inventory_id}}">Remove</a></td> 
-
-            
+              <td>{{ $item['inventory_id'] }}</td>
+              <td>{{ $item['name'] }}</td>
+              <td>{{ $item['description'] }}</td>
+              <td>{{ $item['quantity'] }}</td>
+              <td><a class="edit" href="/update_item/{{$item['inventory_id']}}" > Edit</a></td>
+              <td><a class="remove" href="/inventory_table/{{$item['inventory_id']}}">Remove</a></td>  
               </tr>
               @endforeach
             </tbody>

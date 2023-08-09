@@ -28,7 +28,7 @@
               <td><input class="input_form" type="Text"  name ="inventory_id" required /></td>
               <td><input class="input_form" type="Text"  name ="name" required /></td>
               <td><input class="input_form" type="Text"  name ="description"  required /></td>
-              <td><input  class="input_form" type="number" name ="quantity"  required /></td>
+              <td><input  class="input_form" type="number" name ="quantity" min="0" step="1"  required  /></td>
             </tr>
             <table>
               <h4 class="error_msg">{{ session('message') }}</h4>

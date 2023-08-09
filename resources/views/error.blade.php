@@ -16,7 +16,7 @@
           
           <button class="form-btn sx back" type="button"><a href="/signup"> Sign Up</a>        
             </button>
-          <button class="form-btn dx" type="submit"><a href="/login"> Log In</a> </button>
+          <button class="form-btn dx" type="submit"><a href="/"> Log In</a> </button>
           
         </form>
       </div>

@@ -19,7 +19,12 @@ class TransactionsProjectController extends Controller
     
 
 public function showTransactions()
-{    session(['message2' =>'']);
+{    
+    if (!session()->has('user_id') || !session()->has('userName')) {
+        return redirect('/'); // Redirect to the login page or another appropriate action
+    }
+    
+    session(['message2' =>'']);
 
     $transactions = TransactionsProject::all(); // Fetch transactions from the database
     return view('transactions_table', ['transactions' => $transactions]);
@@ -27,6 +32,11 @@ public function showTransactions()
 }
 
 public function addTransaction(InventoryProject $inventory, $type){
+
+    if (!session()->has('user_id') || !session()->has('userName')) {
+        return redirect('/'); // Redirect to the login page or another appropriate action
+    }
+
 
     $transaction = new TransactionsProject;
     $transaction->inventory_id = $inventory->inventory_id;
