@@ -8,6 +8,10 @@ body {
     background: #ffc185;
 }
 
+.bodyRedis {
+    background: #d0f3f5;
+}
+
 .container {
     position: absolute;
     width: auto;

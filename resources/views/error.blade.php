@@ -12,7 +12,8 @@
        
         <form class="signIn active-dx">
           <h4>Something went wrong! </br><br> Please try again!</h4><br><br>
-                
+          
+          <h4 class="session_msg">{{ session('message3') }}</h4>     
           
           <button class="form-btn sx back" type="button"><a href="/signup"> Sign Up</a>        
             </button>

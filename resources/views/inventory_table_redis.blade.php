@@ -9,7 +9,7 @@
     <title>Inventories</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
-  <body>  
+  <body class="bodyRedis">  
  
     <div class=" container2">
        
@@ -34,8 +34,8 @@
               <td>{{ $item['name'] }}</td>
               <td>{{ $item['description'] }}</td>
               <td>{{ $item['quantity'] }}</td>
-              <td><a class="edit" href="/update_item/{{$item['inventory_id']}}" > Edit</a></td>
-              <td><a class="remove" href="/inventory_table/{{$item['inventory_id']}}">Remove</a></td>  
+              <td><a class="edit" href="/inventory_table" > Edit</a></td>
+              <td><a class="remove" href="/inventory_table">Remove</a></td>  
               </tr>
               @endforeach
             </tbody>
@@ -44,7 +44,7 @@
               <br><br>
                     
              
-            <button class="form-btn form-btn2 sx back" type="button"><a href="/add_item"> Add New</a> </button>
+            <button class="form-btn form-btn2 sx back" type="button"><a href="/inventory_table"> Add New</a> </button>
             <button class="form-btn form-btn2 sx back" type="button"><a href="/transactions">Transactions</a></button> 
                         
         </form>

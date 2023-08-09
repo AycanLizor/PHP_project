@@ -23,7 +23,9 @@ class UsersProjectController extends Controller
 //****************************************************** */
 
     public function loginUser(Request $request)
-    {
+    {  session()->forget(['message_error', 'message2', 'message3']);
+
+
         $validator = Validator::make($request->all(), [
             'email' =>'required',
             'password' => 'required',
@@ -65,6 +67,7 @@ class UsersProjectController extends Controller
 
         
         if ($validator->fails()) {
+            session(['message3' => 'The email already exist or passwords are not the same']);
             return view('error');
         }
         else

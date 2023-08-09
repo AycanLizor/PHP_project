@@ -43,6 +43,7 @@ public function showInventoryTableRedis()
     foreach ($keys as $key) {
         $newKey = ltrim($key, 'laravel_database_');
         $item = Redis::hgetall($newKey);
+        $item['inventory_id']=$newKey;
         $items[]=$item;
     }
 
@@ -90,14 +91,13 @@ public function insertItem(Request $request)
         $item->save(); // Save data to MySql.
 
        
-        $id = 'Inventory:' . $item->inventory_id; // Create id for Redis.
+        $id = 'Inventory:'.$item->inventory_id; // Create id for Redis.
         $itemRedis = [
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'quantity' => $request->input('quantity'),
         ];
-      
-    
+         
         Redis::hmset($id, $itemRedis); // Save data to Redis.
 
         session(['message2' => $request->inventory_id . ' was added']);
@@ -163,6 +163,15 @@ public function updateItem(Request $request)
             $item->quantity = $quantity;
             $item->save();
 
+
+            $itemKey = 'Inventory:' . $inventory_id;
+            $itemRedis = Redis::hgetall($itemKey);
+            $itemRedis['name'] = $name;
+            $itemRedis['description'] = $description;
+            $itemRedis['quantity'] = $quantity;
+            Redis::hmset($itemKey, $itemRedis);
+            
+
             $item_transaction = InventoryProject::find($item->inventory_id);
             $transactionsProjectController = new TransactionsProjectController();
             $savingTransaction = $transactionsProjectController->addTransaction($item_transaction, "Updated");
@@ -197,16 +206,21 @@ public function updateItem(Request $request)
         $item->delete();
         session(['message2' => $request->inventory_id.' was deleted successfully!']);
 
+       
+        $itemKey = 'Inventory:' . $inventory_id;
+        $itemRedis = Redis::hgetall($itemKey);
+        Redis::del($itemKey);
+
+
         $transactionsProjectController = new TransactionsProjectController();
         $savingTransaction = $transactionsProjectController->addTransaction($item,"Deleted");
           
         
         return redirect('inventory_table');
     } else {
-        session(['message2' => $request->inventory_id.' cannot be deleted successfully!']);
+        session(['message2' => $request->inventory_id.' cannot be deleted!']);
         return redirect('inventory_table');
     }
-
-   
+  
   }
 }
