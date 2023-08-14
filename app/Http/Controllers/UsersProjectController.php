@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Models\UsersProject;
@@ -15,43 +16,44 @@ use Illuminate\Support\Facades\Session;
 class UsersProjectController extends Controller
 {
     public function showLoginForm()
-    { 
+    {
         return view('login');
 
     }
 
-//****************************************************** */
+    //****************************************************** */
 
     public function loginUser(Request $request)
-    {  session()->forget(['message_error', 'message2', 'message3']);
+    {
+        session()->forget(['message_error', 'message2', 'message3']);
 
 
         $validator = Validator::make($request->all(), [
-            'email' =>'required',
+            'email' => 'required',
             'password' => 'required',
         ]);
 
-        if ($validator->fails()) 
-        {
+        if ($validator->fails()) {
             return view('error');
         }
 
         $user = UsersProject::where('email', $request->email)
-        ->where('password', $request->password)
-        ->first();
+            ->where('password', $request->password)
+            ->first();
 
         if (!$user) {
-        return view('error');
+            return view('error');
         }
 
         session(['user_id' => $user->user_id, 'userName' => $user->name]);
         return redirect('inventory_table');
     }
 
-//********************************************************************** */
+    //********************************************************************** */
 
     public function showSignUpForm()
-    {    session(['user_id' => null, 'userName' => null]);
+    {
+        session(['user_id' => null, 'userName' => null]);
         return view('signUp');
     }
 
@@ -59,19 +61,17 @@ class UsersProjectController extends Controller
     {
         session(['user_id' => null, 'userName' => null]);
         $validator = Validator::make($request->all(), [
-                'name' =>'required',
-                'email' =>'required|email|unique:users_project',
-                'password' => 'required',
-                'password2' => 'required|same:password',
+            'name' => 'required',
+            'email' => 'required|email|unique:users_project',
+            'password' => 'required',
+            'password2' => 'required|same:password',
         ]);
 
-        
+
         if ($validator->fails()) {
             session(['message3' => 'The email already exist or passwords are not the same']);
             return view('error');
-        }
-        else
-        {
+        } else {
             $user = new UsersProject;
             $user->name = $request->name;
             $user->email = $request->email;
@@ -83,20 +83,20 @@ class UsersProjectController extends Controller
             Mail::to('aycanlizor@gmail.com')->send(new ContactMail());
             return view('success');
         }
-    } 
-    
-//********************************************************************** */
-
-function signOut()
-{
-    try {
-        Session::forget('user_id');
-        Session::forget('userName');
-          
-    return redirect('/');
-    } catch (\Exception $e) {
-        return view('error');
-        
     }
-}
+
+    //********************************************************************** */
+
+    function signOut()
+    {
+        try {
+            Session::forget('user_id');
+            Session::forget('userName');
+
+            return redirect('/');
+        } catch (\Exception $e) {
+            return view('error');
+
+        }
+    }
 }

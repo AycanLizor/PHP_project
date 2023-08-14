@@ -24,9 +24,7 @@
               <th>Name</th>
               <th>Description</th>
               <th>Quantity</th>
-              <th>Edit</th>
-              <th>Remove</th>
-            </thead>
+              </thead>
             <tbody>
               @foreach ($items as $item)
               <tr>
@@ -34,8 +32,6 @@
               <td>{{ $item['name'] }}</td>
               <td>{{ $item['description'] }}</td>
               <td>{{ $item['quantity'] }}</td>
-              <td><a class="edit" href="/inventory_table" > Edit</a></td>
-              <td><a class="remove" href="/inventory_table">Remove</a></td>  
               </tr>
               @endforeach
             </tbody>

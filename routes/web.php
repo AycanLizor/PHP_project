@@ -24,6 +24,8 @@ Route::post('/signOut', [UsersProjectController::class, 'signOut']);
 
 Route::get('/inventory_table', [InventoryProjectController::class,"showInventoryTable"]);
 Route::get('/inventory_table_redis', [InventoryProjectController::class,"showInventoryTableRedis"]);
+Route::get('/showRedisKeys', [InventoryProjectController::class,"showRedisKeys"]);
+
 Route::get('/add_item', [InventoryProjectController::class,"showAddItemForm"]);
 Route::post('/add_item', [InventoryProjectController::class,"insertItem"]);
 

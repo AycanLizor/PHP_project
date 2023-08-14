@@ -13,7 +13,7 @@
  
     <div class=" container2">
        
-        <form class="signIn active-dx form2">
+        <form class="signIn active-dx form2" method="get">
           @csrf
          
           <p class="user_name">User Name: {{ session('userName') }}</p>
@@ -45,10 +45,12 @@
             <table><br><br>
              
               <br><br>
-            <button class="form-btn form-btn2 sx back" type="button"><a href="/add_item"> Add New</a> </button>
-            <button class="form-btn form-btn2 sx back" type="button"><a href="/inventory_table">Inventory List</a></button> 
-            <button class="form-btn form-btn2 dx back" type="button"><a href="/"> SignOut</a></button>  
-        </form>
+             <button class="form-btn form-btn2 sx back" type="button"><a href="/inventory_table">Inventory List</a></button> 
+             </form>
+             <form method="POST" action="/signOut">
+              @csrf <!-- Add Laravel CSRF token -->
+              <button class="form-btn form-btn2 dx back" type="submit">Sign Out</button>
+          </form> 
 
         
       </div>

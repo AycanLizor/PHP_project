@@ -25,17 +25,17 @@
              
             </tr>
             <tr>
-              <td><input class="input_form" type="Text"  name ="inventory_id" required /></td>
+              <td><input class="input_form" type="Text"  name ="inventory_id" maxlength="5" required /></td>
               <td><input class="input_form" type="Text"  name ="name" required /></td>
               <td><input class="input_form" type="Text"  name ="description"  required /></td>
               <td><input  class="input_form" type="number" name ="quantity" min="0" step="1"  required  /></td>
             </tr>
             <table>
-              <h4 class="error_msg">{{ session('message') }}</h4>
+              
           <button class="form-btn dx back" type="submit"> Submit </button>
           <button class="form-btn sx back" ><a href="/inventory_table"> Back to Inventory List</a></button>    
           </form>
-          <h4 class="session_msg">{{ session('message_error') }}</h4>
+          <h4 class="session_msg">{{ session('message2') }}</h4>
                     
         </form>
       </div>
