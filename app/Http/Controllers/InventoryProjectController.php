@@ -7,7 +7,7 @@ use App\Models\InventoryProject;
 use App\Models\TransactionsProject;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redis;
-
+use Illuminate\Validation\Rule;
 
 use DB;
 use App\Http\Requests;
@@ -73,7 +73,7 @@ public function insertItem(Request $request)
     session(['message2' => '']);
     
     $validator = Validator::make($request->all(), [
-        'inventory_id' => 'required',
+        'inventory_id' => 'required|unique:project_inventory',
         'name' => 'required',
         'description' => 'required',
         'quantity' => 'required|integer|min:0'
@@ -140,49 +140,54 @@ public function updateItem(Request $request)
     }
 
     $validator = Validator::make($request->all(), [
-        'inventory_id' => 'required',
         'name' => 'required',
         'description' => 'required',
-        'quantity' => 'required|integer|min:0', // Add the 'integer' rule and set 'min:0' to disallow negative values.
+        'quantity' => 'required|integer|min:0',
     ]);
 
     if ($validator->fails()) {
-        session(['message_error' => 'Item does not exist or quantity is not valid!']);
+        session(['message_error' => 'Quantity is not valid!']); // Update error message
         return redirect()->back()->withErrors($validator)->withInput();
-    } else {
-        $inventory_id = $request->inventory_id;
-        $name = $request->name;
-        $description = $request->description;
-        $quantity = $request->quantity;
-        $item = InventoryProject::find($inventory_id);
-        session(['message2' => '']); 
-                  
-        if ($item) {
-            $item->name = $name;
-            $item->description = $description;
-            $item->quantity = $quantity;
-            $item->save();
+    }
 
+    $inventory_id = $request->inventory_id;
+    $name = $request->name;
+    $description = $request->description;
+    $quantity = $request->quantity;
 
-            $itemKey = 'Inventory:' . $inventory_id;
-            $itemRedis = Redis::hgetall($itemKey);
-            $itemRedis['name'] = $name;
-            $itemRedis['description'] = $description;
-            $itemRedis['quantity'] = $quantity;
-            Redis::hmset($itemKey, $itemRedis);
-            
-
-            $item_transaction = InventoryProject::find($item->inventory_id);
-            $transactionsProjectController = new TransactionsProjectController();
-            $savingTransaction = $transactionsProjectController->addTransaction($item_transaction, "Updated");
-
-            session(['message2' => $request->inventory_id.' was updated successfully!']);
+    $item = InventoryProject::find($inventory_id);
+    session(['message2' => '']); 
+              
+    if ($item) {
+        // Check if the new inventory ID is unique
+        if ($inventory_id !== $item->inventory_id && InventoryProject::where('inventory_id', $inventory_id)->exists()) {
+            session(['message_error' => 'The new Inventory ID already exists!']);
+            return redirect()->back()->withInput();
         }
 
-        return redirect('inventory_table');
-    }
-}
+        $item->inventory_id = $inventory_id; // Update inventory ID
+        $item->name = $name;
+        $item->description = $description;
+        $item->quantity = $quantity;
+        $item->save();
 
+        $itemKey = 'Inventory:' . $inventory_id;
+        $itemRedis = Redis::hgetall($itemKey);
+        $itemRedis['name'] = $name;
+        $itemRedis['description'] = $description;
+        $itemRedis['quantity'] = $quantity;
+        Redis::hmset($itemKey, $itemRedis);
+
+        $transactionsProjectController = new TransactionsProjectController();
+        $savingTransaction = $transactionsProjectController->addTransaction($item, "Updated");
+
+        session(['message2' => $inventory_id.' was updated successfully!']);
+    } else {
+        session(['message_error' => 'Item not found']);
+    }
+
+    return redirect('inventory_table');
+}
 
 //******************************************************* */
 

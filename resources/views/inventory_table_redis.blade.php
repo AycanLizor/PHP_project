@@ -44,9 +44,8 @@
               <br><br>
                     
              
-            <button class="form-btn form-btn2 sx back" type="button"><a href="/inventory_table"> Add New</a> </button>
-            <button class="form-btn form-btn2 sx back" type="button"><a href="/transactions">Transactions</a></button> 
-                        
+            <button class="form-btn form-btn2 sx back" type="button"><a href="/inventory_table"> Inventory List</a> </button>
+                                   
         </form>
         <form method="POST" action="/signOut">
           @csrf <!-- Add Laravel CSRF token -->

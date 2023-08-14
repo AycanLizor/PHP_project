@@ -79,7 +79,7 @@ class UsersProjectController extends Controller
             $user->save();
             // $data = $request->only(['email', 'password', 'password2']);
             // UsersProject::create($data);
-
+            session(['username' => $user->name]);
             Mail::to('aycanlizor@gmail.com')->send(new ContactMail());
             return view('success');
         }

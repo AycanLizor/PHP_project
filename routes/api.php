@@ -20,6 +20,7 @@ Route::post('/apiSignOut', [ApiController::class,"apiSignOut"]);
 
 Route::post('/apiInsertUser', [ApiController::class,"apiInsertUser"]);
 Route::get('/apiInventory', [ApiController::class,"apiShowInventory"]);
+Route::get('/apiInventoryRedis', [ApiController::class,"apiShowInventoryRedis"]);
 Route::post('/apiInsertItem', [ApiController::class,"apiInsertItem"]);
 Route::get('/apiTransactions', [ApiController::class,"apiShowTransactions"]);
 

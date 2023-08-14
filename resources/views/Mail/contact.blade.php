@@ -11,7 +11,12 @@
     <div class="main">
        
         <form class="signIn active-dx">
-          <h4>Welcome! </br><br> You can start to use your account.</h4><br><br>
+           @if(session()->has('username'))
+          <h4>Welcome, {{ session('username') }}!</h4><br><br>
+      @else
+          <h4>Welcome!</h4><br><br>
+      @endif
+    
                         
           <button class="form-btn dx" type="submit"><a href="http://127.0.0.1:8000"> LogIn your account from here</a> </button>
           

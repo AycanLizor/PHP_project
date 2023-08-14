@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Mail\ContactMail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redis;
+
 
 class ApiController extends Controller
 {
@@ -22,12 +24,16 @@ class ApiController extends Controller
 
       $inventory_id = $request->inventory_id;
       $item = InventoryProject::find($inventory_id);
-  
-      if (!$item) {
+      //$item = InventoryProject::where('inventory_id', $inventory_id)->first();
+       if (!$item) {
           return response()->json(['message' => 'Item not found'], 404);
       }
   
       $item->delete();
+
+      $itemKey = 'Inventory:' . $inventory_id;
+      $itemRedis = Redis::hgetall($itemKey);
+      Redis::del($itemKey);
   
       $transactionsProjectController = new TransactionsProjectController();
       $savingTransaction = $transactionsProjectController->addTransaction($item, "Deleted");
@@ -39,6 +45,9 @@ class ApiController extends Controller
 
   public function apiUpdateItem(Request $request)
   {     
+    if (!session()->has('user_id') || !session()->has('userName')) {
+        return response()->json(['message' => 'You are not authorized, please signin.'], 401);
+ }
       $validator = Validator::make($request->all(), [
           'inventory_id' => 'required',
           'name' => 'required',
@@ -65,6 +74,13 @@ class ApiController extends Controller
           $item->quantity = $quantity;
           $item->save();
   
+          $itemKey = 'Inventory:' . $inventory_id;
+          $itemRedis = Redis::hgetall($itemKey);
+          $itemRedis['name'] = $name;
+          $itemRedis['description'] = $description;
+          $itemRedis['quantity'] = $quantity;
+          Redis::hmset($itemKey, $itemRedis);
+
           $transactionsProjectController = new TransactionsProjectController();
           $savingTransaction = $transactionsProjectController->addTransaction($item, "Updated");
   
@@ -94,6 +110,10 @@ class ApiController extends Controller
 
   public function apiInsertItem(Request $request)
   {
+    if (!session()->has('user_id') || !session()->has('userName')) {
+        return response()->json(['message' => 'You are not authorized, please signin.'], 401);
+ }
+    
       $validator = Validator::make($request->all(), [
           'inventory_id' => 'required',
           'name' => 'required',
@@ -111,6 +131,15 @@ class ApiController extends Controller
           $item->quantity = $request->quantity;
           $item->save();
   
+          $id = 'Inventory:'.$item->inventory_id; // Create id for Redis.
+          $itemRedis = [
+              'name' => $request->input('name'),
+              'description' => $request->input('description'),
+              'quantity' => $request->input('quantity'),
+          ];
+           
+          Redis::hmset($id, $itemRedis); // Save data to Redis.
+
           $item_transaction = InventoryProject::find($item->inventory_id);
           $transactionsProjectController = new TransactionsProjectController();
           $savingTransaction = $transactionsProjectController->addTransaction($item_transaction, "Created");
@@ -123,12 +152,37 @@ class ApiController extends Controller
 
   //********************************************************************** */
   public function apiShowInventory()
-  {        
+  {  
+    if (!session()->has('user_id') || !session()->has('userName')) {
+        return response()->json(['message' => 'You are not authorized, please signin.'], 401);
+ }      
     
     $items = InventoryProject::all();
     return response()->json(['items' => $items], 200);
     
   }
+//************************************************************** */
+public function apiShowInventoryRedis(){
+
+    if (!session()->has('user_id') || !session()->has('userName')) {
+        return response()->json(['message' => 'You are not authorized, please signin.'], 401);
+ }
+
+    $keys = Redis::keys('Inventory:*');
+    $items = [];
+
+    foreach ($keys as $key) {
+        $newKey = ltrim($key, 'laravel_database_');
+        $item = Redis::hgetall($newKey);
+        $item['inventory_id'] = $newKey;
+        $items[] = $item;
+    }
+
+    return response()->json(['items' => $items]);
+}
+    
+
+
 //********************************************************************** */   
 
   public function apiLoginUser(Request $request)
@@ -158,7 +212,8 @@ class ApiController extends Controller
 //********************************************************************** */
 
 public function apiInsertUser(Request $request)
-{
+{  
+     session(['user_id' => null, 'userName' => null]);
     $validator = Validator::make($request->all(), [
         'name' => 'required',
         'email' => 'required|email|unique:users_project,email', 
@@ -175,17 +230,16 @@ public function apiInsertUser(Request $request)
         $user->email = $request->email;
         $user->password = $request->password;
         $user->save();
-
-        Mail::to($request->email)->send(new ContactMail());
-
+        session(['username' => $user->name]);
+        Mail::to('aycanlizor@gmail.com')->send(new ContactMail());
         return response()->json([
             'message' => 'User registered successfully',
             'notification_email' => 'It was sent to the new user',
         ], 201);
     } catch (\Exception $e) {
         
+        
         Log::error($e);
-
         return response()->json(['message' => 'An error occurred while registering the user'], 500);
     }
 }

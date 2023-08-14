@@ -59,7 +59,7 @@
           @csrf <!-- Add Laravel CSRF token -->
           <button class="form-btn form-btn2 dx back" type="submit">Sign Out</button>
       </form>
-
+      <button class="form-btn form-btn2 dx back" id="redis" type="button"><a href="/inventory_table_redis">Redis</a></button> 
         
       </div>
 
